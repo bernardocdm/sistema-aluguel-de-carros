@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {#if modo == "editar"}Editar Cliente{#else}Novo Cliente{/if} - Sistema de Aluguel de Carros
+    </title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f0f4f8;
+            color: #1a202c;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #1a365d;
+            color: #fff;
+            padding: 0 2rem;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        header span { font-size: 0.875rem; color: #bee3f8; }
+
+        .container {
+            max-width: 720px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-bottom: 1.25rem;
+        }
+
+        .breadcrumb a {
+            color: #2b6cb0;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: #ebf4ff;
+            padding: 1.25rem 1.75rem;
+            border-bottom: 1px solid #bee3f8;
+        }
+
+        .card-header h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1a365d;
+        }
+
+        .card-header p {
+            font-size: 0.85rem;
+            color: #4a5568;
+            margin-top: 0.25rem;
+        }
+
+        .card-body { padding: 1.75rem; }
+
+        .alert-error {
+            background-color: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-left: 4px solid #c53030;
+            border-radius: 6px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-error h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #c53030;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-error ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .alert-error ul li {
+            font-size: 0.875rem;
+            color: #742a2a;
+            padding: 0.15rem 0;
+        }
+
+        .alert-error ul li::before {
+            content: "• ";
+            color: #c53030;
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #718096;
+            margin-bottom: 1rem;
+            margin-top: 1.5rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-title:first-child { margin-top: 0; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem 1.25rem;
+        }
+
+        .form-grid .full { grid-column: 1 / -1; }
+
+        .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        label .required { color: #c53030; margin-left: 2px; }
+
+        input[type="text"],
+        input[type="number"] {
+            padding: 0.6rem 0.9rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #1a202c;
+            background-color: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #2b6cb0;
+            box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.15);
+        }
+
+        input.invalid {
+            border-color: #c53030;
+            box-shadow: 0 0 0 3px rgba(197, 48, 48, 0.1);
+        }
+
+        .hint {
+            font-size: 0.77rem;
+            color: #718096;
+        }
+
+        .rendimentos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .rendimento-label {
+            font-size: 0.82rem;
+            color: #4a5568;
+            margin-bottom: 0.2rem;
+        }
+
+        .rendimentos-info {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-top: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background-color: #f7fafc;
+            border-radius: 5px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-footer {
+            padding: 1.25rem 1.75rem;
+            background-color: #f7fafc;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.6rem 1.4rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn:active { transform: scale(0.98); }
+
+        .btn-primary {
+            background-color: #2b6cb0;
+            color: #fff;
+        }
+
+        .btn-primary:hover { background-color: #2c5282; }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-secondary:hover { background-color: #cbd5e0; }
+
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .rendimentos-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Sistema de Aluguel de Carros</h1>
+    <span>Gestao de Clientes</span>
+</header>
+
+<div class="container">
+    <div class="breadcrumb">
+        <a href="/clientes">Clientes</a> /
+        {#if modo == "editar"}Editar{#else}Novo{/if}
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                {#if modo == "editar"}Editar Cliente{#else}Cadastrar Novo Cliente{/if}
+            </h2>
+            <p>Preencha os dados abaixo. Campos marcados com * sao obrigatorios.</p>
+        </div>
+
+        <div class="card-body">
+            {#if erros.size() > 0}
+            <div class="alert-error">
+                <h4>Corrija os erros abaixo:</h4>
+                <ul>
+                    {#for erro in erros}
+                    <li>{erro}</li>
+                    {/for}
+                </ul>
+            </div>
+            {/if}
+
+            {#if modo == "editar"}
+            <form method="POST" action="/clientes/{cliente.id}" id="clienteForm" novalidate>
+            {#else}
+            <form method="POST" action="/clientes" id="clienteForm" novalidate>
+            {/if}
+
+                <p class="section-title">Dados Pessoais</p>
+
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label for="nome">Nome Completo <span class="required">*</span></label>
+                        <input
+                            type="text"
+                            id="nome"
+                            name="nome"
+                            value="{cliente.nome}"
+                            placeholder="Digite o nome completo"
+                            required
+                            maxlength="100"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cpf">CPF <span class="required">*</span></label>
+                        <input
+                            type="text"
+                            id="cpf"
+                            name="cpf"
+                            value="{cliente.cpf}"
+                            placeholder="000.000.000-00"
+                            required
+                            maxlength="14"
+                        />
+                        <span class="hint">Formato: 000.000.000-00</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rg">RG <span class="required">*</span></label>
+                        <input
+                            type="text"
+                            id="rg"
+                            name="rg"
+                            value="{cliente.rg}"
+                            placeholder="00.000.000-0"
+                            required
+                            maxlength="20"
+                        />
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="endereco">Endereco <span class="required">*</span></label>
+                        <input
+                            type="text"
+                            id="endereco"
+                            name="endereco"
+                            value="{cliente.endereco}"
+                            placeholder="Rua, numero, bairro, cidade - UF"
+                            required
+                            maxlength="255"
+                        />
+                    </div>
+                </div>
+
+                <p class="section-title">Dados Profissionais</p>
+
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label for="profissao">Profissao <span class="required">*</span></label>
+                        <input
+                            type="text"
+                            id="profissao"
+                            name="profissao"
+                            value="{cliente.profissao}"
+                            placeholder="Ex: Engenheiro, Medico, Advogado..."
+                            required
+                            maxlength="100"
+                        />
+                    </div>
+
+                    <p class="section-title full">Rendimentos (maximo 3)</p>
+
+                    <div class="form-group">
+                        <label for="rendimento1">Rendimento 1</label>
+                        <input
+                            type="number"
+                            id="rendimento1"
+                            name="rendimento1"
+                            value="{cliente.rendimento1}"
+                            placeholder="0.00"
+                            min="0"
+                            step="0.01"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rendimento2">Rendimento 2</label>
+                        <input
+                            type="number"
+                            id="rendimento2"
+                            name="rendimento2"
+                            value="{cliente.rendimento2}"
+                            placeholder="0.00"
+                            min="0"
+                            step="0.01"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rendimento3">Rendimento 3</label>
+                        <input
+                            type="number"
+                            id="rendimento3"
+                            name="rendimento3"
+                            value="{cliente.rendimento3}"
+                            placeholder="0.00"
+                            min="0"
+                            step="0.01"
+                        />
+                    </div>
+                </div>
+
+                <div class="rendimentos-info">
+                    O sistema aceita no maximo 3 rendimentos por cliente. Campos nao preenchidos sao ignorados.
+                </div>
+
+                <div style="display:none">
+                    <input type="hidden" name="_method" value="PUT" id="hiddenMethod"/>
+                </div>
+
+        </div>
+
+        <div class="card-footer">
+            <a href="/clientes" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary" form="clienteForm">
+                {#if modo == "editar"}Salvar Alteracoes{#else}Cadastrar Cliente{/if}
+            </button>
+        </div>
+
+            </form>
+    </div>
+</div>
+
+<script>
+    const cpfInput = document.getElementById('cpf');
+    const rgInput = document.getElementById('rg');
+
+    cpfInput.addEventListener('input', function () {
+        let v = this.value.replace(/\D/g, '');
+        if (v.length > 3) v = v.slice(0, 3) + '.' + v.slice(3);
+        if (v.length > 7) v = v.slice(0, 7) + '.' + v.slice(7);
+        if (v.length > 11) v = v.slice(0, 11) + '-' + v.slice(11);
+        this.value = v.slice(0, 14);
+    });
+
+    rgInput.addEventListener('input', function () {
+        let v = this.value.replace(/[^\d]/g, '');
+        this.value = v.slice(0, 14);
+    });
+
+    document.getElementById('clienteForm').addEventListener('submit', function (e) {
+        let valid = true;
+        const errors = [];
+
+        const nome = document.getElementById('nome').value.trim();
+        if (!nome) { errors.push('Nome e obrigatorio'); valid = false; }
+
+        const cpf = cpfInput.value.replace(/\D/g, '');
+        if (cpf.length !== 11) {
+            errors.push('CPF deve ter 11 digitos');
+            valid = false;
+        } else if (!validarCpfJS(cpf)) {
+            errors.push('CPF invalido');
+            valid = false;
+        }
+
+        const rg = rgInput.value.replace(/[^\dxX]/g, '');
+        if (rg.length < 5) {
+            errors.push('RG deve ter pelo menos 5 caracteres');
+            valid = false;
+        }
+
+        const endereco = document.getElementById('endereco').value.trim();
+        if (!endereco) { errors.push('Endereco e obrigatorio'); valid = false; }
+
+        const profissao = document.getElementById('profissao').value.trim();
+        if (!profissao) { errors.push('Profissao e obrigatoria'); valid = false; }
+
+        const r1 = document.getElementById('rendimento1').value;
+        const r2 = document.getElementById('rendimento2').value;
+        const r3 = document.getElementById('rendimento3').value;
+
+        [r1, r2, r3].forEach((r, i) => {
+            if (r && parseFloat(r) < 0) {
+                errors.push('Rendimento ' + (i+1) + ' nao pode ser negativo');
+                valid = false;
+            }
+        });
+
+        if (!valid) {
+            e.preventDefault();
+            const existing = document.querySelector('.alert-error');
+            if (existing) existing.remove();
+
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert-error';
+            alertDiv.innerHTML = '<h4>Corrija os erros abaixo:</h4><ul>' +
+                errors.map(err => '<li>' + err + '</li>').join('') +
+                '</ul>';
+            document.querySelector('.card-body').prepend(alertDiv);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+
+    function validarCpfJS(digits) {
+        if (new Set(digits.split('')).size === 1) return false;
+
+        let sum = 0;
+        for (let i = 0; i < 9; i++) sum += parseInt(digits[i]) * (10 - i);
+        let first = 11 - (sum % 11);
+        if (first >= 10) first = 0;
+        if (first !== parseInt(digits[9])) return false;
+
+        sum = 0;
+        for (let i = 0; i < 10; i++) sum += parseInt(digits[i]) * (11 - i);
+        let second = 11 - (sum % 11);
+        if (second >= 10) second = 0;
+        return second === parseInt(digits[10]);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - Sistema de Aluguel de Carros</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f0f4f8;
+            color: #1a202c;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #1a365d;
+            color: #fff;
+            padding: 0 2rem;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        header span {
+            font-size: 0.875rem;
+            color: #bee3f8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a365d;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn:active { transform: scale(0.98); }
+
+        .btn-primary {
+            background-color: #2b6cb0;
+            color: #fff;
+        }
+
+        .btn-primary:hover { background-color: #2c5282; }
+
+        .btn-danger {
+            background-color: #c53030;
+            color: #fff;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-danger:hover { background-color: #9b2c2c; }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-secondary:hover { background-color: #cbd5e0; }
+
+        .search-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-bar input {
+            flex: 1;
+            max-width: 360px;
+            padding: 0.55rem 1rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background-color: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #2b6cb0;
+            box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.15);
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #ebf4ff;
+        }
+
+        thead th {
+            padding: 0.85rem 1.2rem;
+            text-align: left;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #2c5282;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-top: 1px solid #e2e8f0;
+            transition: background-color 0.15s;
+        }
+
+        tbody tr:hover { background-color: #f7fafc; }
+
+        tbody td {
+            padding: 0.9rem 1.2rem;
+            font-size: 0.9rem;
+            color: #2d3748;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-blue {
+            background-color: #ebf8ff;
+            color: #2b6cb0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .btn-edit {
+            background-color: #2b6cb0;
+            color: #fff;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .btn-edit:hover { background-color: #2c5282; }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #718096;
+        }
+
+        .empty-state p { font-size: 1rem; margin-bottom: 1.5rem; }
+
+        .total-info {
+            padding: 0.75rem 1.2rem;
+            background-color: #f7fafc;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.85rem;
+            color: #718096;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Sistema de Aluguel de Carros</h1>
+    <span>Gestao de Clientes</span>
+</header>
+
+<div class="container">
+    <div class="page-header">
+        <h2>Clientes Cadastrados</h2>
+        <a href="/clientes/novo" class="btn btn-primary">+ Novo Cliente</a>
+    </div>
+
+    <form class="search-bar" method="GET" action="/clientes">
+        <input
+            type="text"
+            name="busca"
+            placeholder="Buscar por nome..."
+            value="{busca}"
+        />
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        {#if busca}
+        <a href="/clientes" class="btn btn-secondary">Limpar</a>
+        {/if}
+    </form>
+
+    <div class="card">
+        {#if clientes.isEmpty}
+        <div class="empty-state">
+            <p>Nenhum cliente encontrado.</p>
+            <a href="/clientes/novo" class="btn btn-primary">Cadastrar primeiro cliente</a>
+        </div>
+        {#else}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>RG</th>
+                    <th>Profissao</th>
+                    <th>Rendimento Total</th>
+                    <th>Endereco</th>
+                    <th>Acoes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {#for cliente in clientes}
+                <tr>
+                    <td><span class="badge badge-blue">{cliente.id}</span></td>
+                    <td><strong>{cliente.nome}</strong></td>
+                    <td>{cliente.cpf}</td>
+                    <td>{cliente.rg}</td>
+                    <td>{cliente.profissao}</td>
+                    <td>R$ {cliente.totalRendimentos()}</td>
+                    <td>{cliente.endereco}</td>
+                    <td>
+                        <div class="actions">
+                            <a href="/clientes/{cliente.id}/editar" class="btn-edit">Editar</a>
+                            <form method="POST" action="/clientes/{cliente.id}" onsubmit="return confirm('Deseja excluir este cliente?')">
+                                <input type="hidden" name="_method" value="DELETE"/>
+                                <button type="submit" class="btn btn-danger">Excluir</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {/for}
+            </tbody>
+        </table>
+        <div class="total-info">
+            Total: {clientes.size()} cliente(s) encontrado(s)
+        </div>
+        {/if}
+    </div>
+</div>
+
+</body>
+</html>
