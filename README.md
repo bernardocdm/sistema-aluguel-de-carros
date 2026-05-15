@@ -2,8 +2,6 @@
 
 Sistema web desenvolvido para gerenciar o processo de aluguel de veículos, permitindo que clientes realizem solicitações de locação e que agentes realizem a análise e aprovação dos pedidos.
 
-O projeto está sendo desenvolvido como parte da disciplina **Laboratório de Desenvolvimento de Software**.
-
 ---
 
 ## 🚧 Status do Projeto
@@ -20,7 +18,6 @@ O projeto está sendo desenvolvido como parte da disciplina **Laboratório de De
 - [Sobre o Projeto](#sobre-o-projeto)
 - [Diagramas](#-diagramas)
 - [Funcionalidades](#-funcionalidades-principais)
-- [Autores](#-autores)
 - [Tecnologias Utilizadas](#-tecnologias-utilizadas)
 
 
@@ -34,7 +31,6 @@ A aplicação tem como objetivo organizar e automatizar o fluxo de locação, de
 
 O sistema foi projetado com foco em organização, modularidade e clareza estrutural, utilizando conceitos de engenharia de software como modelagem UML, separação de responsabilidades e planejamento orientado a boas práticas de desenvolvimento.
 
-Este projeto está sendo desenvolvido como parte da disciplina **Laboratório de Desenvolvimento de Software**, com o objetivo de aplicar na prática os conceitos estudados ao longo do curso.
 
 **Principais características:**
 
@@ -82,13 +78,6 @@ Este projeto está sendo desenvolvido como parte da disciplina **Laboratório de
 - Fluxo de aprovação/reprovação de contratos por agentes
   
 ---
-
-## 👨‍💻 Autores
-
-- Arthur Modesto Couto
-- Bernardo Carvalho Denucci Mercado
-- Mateus Azevedo Araújo
-- Matheus Dias Mendes
   
 
 ## 📁 Estrutura do Projeto
