@@ -1,4 +1,4 @@
-# 🏷️ Sistema de aluguel de carros
+# 🏷️ Drive Hub - Sistema de aluguel de carros
 
 Sistema web desenvolvido para gerenciar o processo de aluguel de veículos, permitindo que clientes realizem solicitações de locação e que agentes realizem a análise e aprovação dos pedidos.
 
@@ -25,7 +25,7 @@ Sistema web desenvolvido para gerenciar o processo de aluguel de veículos, perm
 ---
 ## 📝 Sobre o Projeto
 
-Este projeto consiste no desenvolvimento de um sistema web para gerenciamento do processo de aluguel de veículos, permitindo a interação entre clientes e agentes responsáveis pela análise e aprovação das solicitações.
+O Drive Hub consiste no desenvolvimento de um sistema web para gerenciamento do processo de aluguel de veículos, permitindo a interação entre clientes e agentes responsáveis pela análise e aprovação das solicitações.
 
 A aplicação tem como objetivo organizar e automatizar o fluxo de locação, desde o cadastro de usuários até a criação, acompanhamento e validação de pedidos de aluguel. Clientes podem realizar solicitações informando os dados necessários para a locação, enquanto agentes avaliam essas solicitações com base em critérios definidos, incluindo análise financeira e verificação de informações.
 
